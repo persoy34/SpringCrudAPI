@@ -1,10 +1,12 @@
 package com.spring.crud.api.model;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -14,6 +16,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity 
 @Table(name="state")
 @NamedQueries({
@@ -21,8 +25,10 @@ import javax.validation.constraints.NotNull;
     @NamedQuery(name = "State.findByCode", query = "SELECT s FROM State s WHERE s.stateCode =:code"),
     @NamedQuery(name = "State.findByID", query = "Select s FROM State s where s.id =: id")
     })
-public class State {
+public class State implements Serializable{
 	
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "state_id")
@@ -36,7 +42,8 @@ public class State {
 	@Column(unique = true, name="code")
 	private String stateCode;
 	
-	@OneToMany(mappedBy="state")
+	@JsonIgnore
+	@OneToMany(mappedBy="state", fetch = FetchType.EAGER)
 	Set<City> citySet = new HashSet<>();
 
 	public Long getId() {

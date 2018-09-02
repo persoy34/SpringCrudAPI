@@ -78,10 +78,13 @@ public class CityController {
 				}
 				city.setState(state);
 			}
+			if (city.getId() == null) {
+				city = cityDAO.getCityByName(city.getCityName());
+			}
 			city = cityDAO.updateCity(city);
 			return new ResponseEntity<City>(city, HttpStatus.OK);
 		} catch (Exception e) {
-			throw new RestClientResponseException(e.getMessage(), HttpStatus.NOT_FOUND.value(), "", null, null, null);
+			throw new RestClientResponseException(e.getLocalizedMessage(), HttpStatus.NOT_FOUND.value(), "", null, null, null);
 		}
 	}
 }
